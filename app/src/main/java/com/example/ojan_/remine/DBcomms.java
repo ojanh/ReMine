@@ -23,27 +23,20 @@ import java.net.URLEncoder;
 
 public class DBcomms {
     String Query;
-    Context ctxt;
-    AlertDialog loading = new AlertDialog.Builder(ctxt).create();
+    String type;
 
-
-
-    public DBcomms(String query, Context ctx) { //constructor object
+    public DBcomms(String type,String query) {
+        this.type = type;
         Query = query;
-        ctxt = ctx;
     }
 
-    public void checkData(){
-         abstract class checkData extends AsyncTask<String, Void, Void> {
-            private String LoginURL; //=(Belum Tau)
-             String result="";
-             @Override
-            protected Void doInBackground(String... params) {
-                //set parameter dalam background execute
-                String type=params[0];
-                String queIns=params[1];
 
-                //setup koneksi dengan PHP
+
+
+    public String checkData(){
+        String LoginURL = ""; //URL link ke php belom ada cuy
+        String result="";
+        //setup koneksi dengan PHP
                 try {
                     URL linkURL = new URL(LoginURL); //setURL
                     HttpURLConnection linkcon = (HttpURLConnection) linkURL.openConnection(); //open port 80 connection
@@ -67,10 +60,13 @@ public class DBcomms {
                     //Ambil data dari PHP (Hasil SQLquerying)
                     InputStream inStream=linkcon.getInputStream();
                     BufferedReader buffRead = new BufferedReader(new InputStreamReader(inStream, "iso-8859-1"));
-                   //inisial result data
+
+                    //inisial result data
+                    
                     String line=""; //variabel diambil dari bufferreader data dari PHP
 
-                    //write data dari php echo ke var line
+
+                    //write data dari php echo ke var line lalu add ke result
                     while((line = buffRead.readLine()) != null){
                         result += line;
                     }
@@ -82,35 +78,21 @@ public class DBcomms {
                     //close http Connection
                     linkcon.disconnect();
 
+                    //return hasil result
+                    
 
 
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
                 } catch (IOException e){
                     e.printStackTrace();
                 }
 
-
-
+            return result;       
             }
 
-            @Override
-            protected void onPreExecute() { //sebelum dieksekusi dialog loading munculin dulu
-                loading.setTitle("Login to DB");
-                loading.setMessage("Lagi Login");
-                loading.show();
-            }
-
-             @Override
-             protected void onPostExecute(Void result) {
-                 loading.setMessage(result);
-                 loading.show();
-             }
-         }
 
 
-    }
+
+
     public void getQuery(){
 
 

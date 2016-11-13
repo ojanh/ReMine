@@ -1,6 +1,8 @@
 package com.example.ojan_.remine;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
@@ -12,6 +14,10 @@ import android.widget.EditText;
 
 public class LoginMenu extends AppCompatActivity {
 
+    EditText usernam;
+    EditText passw;
+
+    //create Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) { //saat di launch event
         super.onCreate(savedInstanceState);
@@ -20,22 +26,44 @@ public class LoginMenu extends AppCompatActivity {
         setContentView(R.layout.activity_login_menu);
 
         Button loginBtn = (Button) findViewById(R.id.loginbutton);
-        EditText usernam = (EditText) findViewById(R.id.username);
-        final EditText passw = (EditText) findViewById(R.id.pass);
+        usernam = (EditText) findViewById(R.id.username);
+        passw = (EditText) findViewById(R.id.pass);
 
-        final String Username=usernam.getText().toString();
-        String Password= passw.getText().toString();
 
         loginBtn.setOnClickListener(new View.OnClickListener() { //saat logi
             @Override
             public void onClick(View v) {
-                DBcomms checkLogin = new DBcomms(
-                        "SELECT 1 FROM //nama_Tabel WHERE username= " + usernam + "AND passsword= " +passw);
-                checkLogin.checkData();
+               GetData(usernam.getText().toString(),passw.getText().toString());
+            }
+
+        });
+    }
+
+    //fungsi GetData
+    public void GetData(final String U1, String U2){
+        class Login extends AsyncTask<String,Void,Void> {
+            String username=LoginMenu.this.usernam.getText().toString();
+            String password=LoginMenu.this.passw.getText().toString();
+            AlertDialog dialoggetQuery;
+
+            @Override
+            protected Void doInBackground(String... params) {
+                DBcomms checkLogin = new DBcomms
+                        ("SELECT 1 FROM //nama_Tabel WHERE username= " + username + "AND passsword= " + password + ";", "Login");
+
+                String hasil = checkLogin.checkData();
+
+
+                return null;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                //dialoggetQuery=new (AlertDialog.)
 
             }
         }
     }
-    }
+}
 
 
