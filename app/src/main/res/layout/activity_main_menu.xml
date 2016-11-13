@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+
+    tools:context="com.example.ojan_.remine.MainMenu">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mau Service Apa ??"
+        android:textColor="#9A9A9A"
+        android:textSize="12pt"
+        android:fontFamily="light"
+        android:id="@+id/welcome_text"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <!--Radioo-->
+    <!--Radio service icon button -->
+    <ImageButton
+        android:layout_width="25pt"
+        android:layout_height="25pt"
+        android:layout_below="@+id/welcome_text"
+        android:background="@drawable/radio_icon"
+        android:id="@+id/radioservice_button"
+        android:layout_marginTop="12pt"
+        android:layout_marginLeft="30pt"
+        />
+
+    <!--tulisan radio service -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Radio"
+        android:textSize="15pt"
+        android:id="@+id/text_serviceRadio"
+        android:layout_above="@+id/tv_icon"
+        android:layout_toEndOf="@+id/radioservice_button"
+        android:layout_marginStart="50dp" />
+
+    <!--tv -->
+    <!--tv service icon button -->
+    <ImageButton
+        android:layout_width="25pt"
+        android:layout_height="25pt"
+        android:layout_below="@+id/radioservice_button"
+        android:layout_marginTop="12pt"
+        android:layout_marginLeft="30pt"
+        android:id="@+id/tv_icon" />
+
+    <!--tulisan tv service -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="TV"
+        android:textSize="15pt"
+        android:id="@+id/text_serviceTV"
+        android:layout_alignTop="@+id/tv_icon"
+        android:layout_alignStart="@+id/text_serviceRadio"
+        android:layout_marginTop="5pt"
+        android:layout_marginStart="12pt"/>
+
+    <!--Komputer -->
+    <!--Komputer service icon button -->
+    <ImageButton
+        android:layout_width="25pt"
+        android:layout_height="25pt"
+        android:layout_below="@+id/tv_icon"
+        android:layout_marginTop="12pt"
+        android:layout_marginLeft="30pt"
+        android:id="@+id/komputer_icon" />
+
+    <!--tulisan tv service -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Komputer"
+        android:textSize="15pt"
+        android:id="@+id/text_servicekomputer"
+        android:layout_below="@id/text_serviceTV"
+        android:layout_alignTop="@id/komputer_icon"
+        android:layout_marginTop="4pt"
+        android:layout_alignEnd="@+id/welcome_text" />
+
+
+
+
+
+</RelativeLayout>
