@@ -1,12 +1,8 @@
 package com.example.ojan_.remine;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.renderscript.ScriptGroup;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
 
 
 /**
@@ -39,10 +34,10 @@ public class DBcomms {
     }
 
     public void checkData(){
-         abstract class checkData extends AsyncTask<String,Void,String> {
+         abstract class checkData extends AsyncTask<String, Void, Void> {
             private String LoginURL; //=(Belum Tau)
-            Dialog
-            @Override
+             String result="";
+             @Override
             protected Void doInBackground(String... params) {
                 //set parameter dalam background execute
                 String type=params[0];
@@ -60,23 +55,24 @@ public class DBcomms {
                     OutputStream outStream=linkcon.getOutputStream(); //set untuk kirim data
                     BufferedWriter buffWrite = new BufferedWriter(new OutputStreamWriter(outStream,"UTF-8")); //setup text pengiriman
 
-                    //setup text query yang akan dikirm
-                    String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")+&+
-                            ;
+                    //setup POST HTTP Method yang akan dikirm
+                    String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")
+                            +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8");
 
-                    buffWrite.write(Checkdata_inPHP);  //kirim data ke PHP
-                    buffWrite.flush();
-                    buffWrite.close();
+                    //kirim data ke PHP
+                    buffWrite.write(Checkdata_inPHP);
+                    buffWrite.flush(); //hapus buffer
+                    buffWrite.close(); //close buffer
 
                     //Ambil data dari PHP (Hasil SQLquerying)
                     InputStream inStream=linkcon.getInputStream();
                     BufferedReader buffRead = new BufferedReader(new InputStreamReader(inStream, "iso-8859-1"));
-                    String result=""; //inisial result data
+                   //inisial result data
                     String line=""; //variabel diambil dari bufferreader data dari PHP
 
+                    //write data dari php echo ke var line
                     while((line = buffRead.readLine()) != null){
                         result += line;
-
                     }
 
                     //close read
@@ -96,7 +92,7 @@ public class DBcomms {
                 }
 
 
-                return null;
+
             }
 
             @Override
@@ -107,7 +103,7 @@ public class DBcomms {
             }
 
              @Override
-             protected void onPostExecute(String result) {
+             protected void onPostExecute(Void result) {
                  loading.setMessage(result);
                  loading.show();
              }
