@@ -57,7 +57,7 @@ public class LoginMenu extends AppCompatActivity {
     //fungsi GetData
     public void GetData(final String U1, String U2){
         class Login extends AsyncTask<String,Void,Void> {
-            String username=LoginMenu.this.usernam.getText().toString(); //set username
+            String username=LoginMenu.this.usernam.getText().toString();//set username
             String password=LoginMenu.this.passw.getText().toString(); //set pass
             AlertDialog dialoggetQuery; //getquery dialog
 
