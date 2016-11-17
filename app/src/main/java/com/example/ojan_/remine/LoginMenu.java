@@ -49,7 +49,7 @@ public class LoginMenu extends AppCompatActivity {
             @Override
             protected Void doInBackground(String... params) {
                 DBcomms checkLogin = new DBcomms
-                        ("SELECT 1 FROM //nama_Tabel WHERE username= " + username + "AND passsword= " + password + ";", "Login");
+                        ("SELECT 1 FROM //nama_Tabel WHERE username=" + username + " AND passsword=" + password + ";", "Login");
 
                 String hasil = checkLogin.checkData();
 
@@ -60,6 +60,7 @@ public class LoginMenu extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 //dialoggetQuery=new (AlertDialog.)
+
 
             }
         }
