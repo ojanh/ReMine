@@ -2,6 +2,7 @@ package com.example.ojan_.remine;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,23 +34,37 @@ public class LoginMenu extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() { //saat logi
             @Override
             public void onClick(View v) {
-               GetData(usernam.getText().toString(),passw.getText().toString());
+               String user_nama=usernam.getText().toString(); //ubah data text ke string
+
+                GetData(usernam.getText().toString(),passw.getText().toString());
+
+                //pindah activity ke MainMenu
+                Intent pindah = new Intent(getApplicationContext(),MainMenu.class);
+                pindah.putExtra("username",user_nama);
+                startActivity(pindah);
             }
 
         });
     }
 
+
+
+
+
+
+
+
     //fungsi GetData
     public void GetData(final String U1, String U2){
         class Login extends AsyncTask<String,Void,Void> {
-            String username=LoginMenu.this.usernam.getText().toString();
-            String password=LoginMenu.this.passw.getText().toString();
-            AlertDialog dialoggetQuery;
+            String username=LoginMenu.this.usernam.getText().toString(); //set username
+            String password=LoginMenu.this.passw.getText().toString(); //set pass
+            AlertDialog dialoggetQuery; //getquery dialog
 
             @Override
             protected Void doInBackground(String... params) {
                 DBcomms checkLogin = new DBcomms
-                        ("SELECT 1 FROM //nama_Tabel WHERE username=" + username + " AND passsword=" + password + ";", "Login");
+                        ("SELECT 1 FROM //nama_Tabel WHERE username=" + username + " AND passsword=" + password + ";");
 
                 String hasil = checkLogin.checkData();
 
@@ -59,8 +74,19 @@ public class LoginMenu extends AppCompatActivity {
 
             @Override
             protected void onPreExecute() {
-                //dialoggetQuery=new (AlertDialog.)
+                dialoggetQuery= new AlertDialog.Builder(LoginMenu.this).create();
+                dialoggetQuery.setTitle("Login Status");
+                dialoggetQuery.setMessage("Lagi check");
+                dialoggetQuery.show();
 
+
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                dialoggetQuery.setMessage("Login dengan ID" + username);
+                dialoggetQuery.show();
 
             }
         }

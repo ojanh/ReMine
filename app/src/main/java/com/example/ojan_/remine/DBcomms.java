@@ -22,17 +22,15 @@ import java.net.URLEncoder;
  */
 
 public class DBcomms {
-    String Query;
-    String type;
+    String Query; //tipe query hanya Login,GetData,SetData
 
-    public DBcomms(String type,String query) {
-        this.type = type;
-        Query = query;
+    public DBcomms(String query) {
+         Query = query;
     }
 
 
 
-
+    //untuk cek data (Buat Login)
     public String checkData(){
         String LoginURL = ""; //URL link ke php belom ada cuy
         String result="";
@@ -50,7 +48,7 @@ public class DBcomms {
 
                     //setup POST HTTP Method yang akan dikirm
                     String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")
-                            +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8");
+                            +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode("check","UTF-8");
 
                     //kirim data ke PHP
                     buffWrite.write(Checkdata_inPHP);
@@ -92,7 +90,7 @@ public class DBcomms {
 
 
 
-
+    //getQuery (Buat Request Aplikasi itu sendiri
     public String getQuery(){
         String LoginURL = ""; //URL link ke php belom ada cuy
         String result="";
@@ -110,7 +108,7 @@ public class DBcomms {
 
             //setup POST HTTP Method yang akan dikirm
             String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")
-                    +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(type,"UTF-8");
+                    +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode("get","UTF-8");
 
             //kirim data ke PHP
             buffWrite.write(Checkdata_inPHP);
