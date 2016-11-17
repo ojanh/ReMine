@@ -39,6 +39,7 @@ public class LoginMenu extends AppCompatActivity {
                 GetData(usernam.getText().toString(),passw.getText().toString());
 
                 //pindah activity ke MainMenu
+                //
                 Intent pindah = new Intent(getApplicationContext(),MainMenu.class);
                 pindah.putExtra("username",user_nama);
                 startActivity(pindah);

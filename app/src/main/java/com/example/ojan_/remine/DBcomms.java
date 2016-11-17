@@ -91,6 +91,7 @@ public class DBcomms {
 
 
     //getQuery (Buat Request Aplikasi itu sendiri
+    //result berupa JSON Object
     public String getQuery(){
         String LoginURL = ""; //URL link ke php belom ada cuy
         String result="";
