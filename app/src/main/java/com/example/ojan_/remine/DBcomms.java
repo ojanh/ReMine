@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 public class DBcomms {
     String Query; //tipe query hanya CheckData,GetData,SetData
     String LoginIP = "http://127.0.0.1/"; //URL link ke php (belom ada)
-
+    String roleLogin;
     //constructors
     public DBcomms(String query) {
          Query = query;
@@ -69,13 +69,20 @@ public class DBcomms {
                     //inisial result data
                     
                     String line=""; //variabel diambil dari bufferreader data dari PHP
-
+                    int lineCount = 0;
 
                     //write data dari php echo ke var line lalu add ke result
-                    while((line = buffRead.readLine()) != null){
+                    while((line = buffRead.readLine()) != "$"){
                         result += line;
+                        lineCount++;
                     }
 
+                    buffRead.skip(lineCount);
+
+                    while ((line = buffRead.readLine()) != null){
+                        roleLogin += line;
+
+                    }
                     //close read
                     buffRead.close();
                     inStream.close();
@@ -91,9 +98,14 @@ public class DBcomms {
                     e.printStackTrace();
                 }
 
-            return result;       
+            return result;
+
             }
 
+    //untuk ambil roleLogin
+    public String getRoleLogin(){
+        return roleLogin;
+    }
 
     //getQuery (Buat Request SQL table)
     //result berupa JSON Object
@@ -115,7 +127,7 @@ public class DBcomms {
 
             //setup POST HTTP Method yang akan dikirm
             String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")
-                    +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode("get","UTF-8");
+                    +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode(roleLogin,"UTF-8");
 
             //kirim data ke PHP
             buffWrite.write(Checkdata_inPHP);
@@ -153,9 +165,6 @@ public class DBcomms {
 
         return result;
     }
-
-
-
 
     //setQuery (Data Manipulation (Update dan insert into))
     public void setQuery(){

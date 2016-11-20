@@ -34,9 +34,17 @@ public class LoginMenu extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog dialoggetQuery;
+                dialoggetQuery= new AlertDialog.Builder(LoginMenu.this).create();
+                dialoggetQuery.setTitle("Login Status");
+                dialoggetQuery.setMessage("Lagi check");
+                dialoggetQuery.show();
 
-                //pindah ke fungsi getData()
-                GetData(usernam.getText().toString(),passw.getText().toString());
+                //pindah ke background tasking
+                Login login = new Login();
+                login.execute(usernam.getText().toString(), passw.getText().toString());
+
+
 
                 //pindah activity ke MainMenu (Temp ke UserView)
                 Intent pindah = new Intent(getApplicationContext(),MainMenu.class);
@@ -54,44 +62,49 @@ public class LoginMenu extends AppCompatActivity {
 
 
 
-    //fungsi GetData
-    public void GetData(final String U1, String U2z){
-        class Login extends AsyncTask<String,Void,Void> {
-            String username=LoginMenu.this.usernam.getText().toString();//set username
-            String password=LoginMenu.this.passw.getText().toString(); //set pass
-            AlertDialog dialoggetQuery; //getquery dialog
-            String hasil;
-            @Override
-            protected Void doInBackground(String... params) {
-                //Login query
-                DBcomms checkLogin = new DBcomms
-                        ("SELECT * FROM users WHERE username='" + username + "' AND passsword='" + password + "'");
-
-                hasil= checkLogin.checkData("login");
+    //fungsi
+    class Login extends AsyncTask<String,Void,Void> {
 
 
-                return null;
-            }
+        AlertDialog dialoggetQuery; //getquery dialog
+        String hasil;
 
-            @Override
-            protected void onPreExecute() {
-                dialoggetQuery= new AlertDialog.Builder(LoginMenu.this).create();
-                dialoggetQuery.setTitle("Login Status");
-                dialoggetQuery.setMessage("Lagi check");
-                dialoggetQuery.show();
+        @Override
+        protected Void doInBackground(String... params) {
+            //Login query
+            String username=params[0];
+            String password=params[1];
+
+            DBcomms checkLogin = new DBcomms
+                    ("SELECT * FROM users WHERE user_id '" + username + "' AND passsword='" + password + "'");
+
+            hasil= checkLogin.checkData("login");
 
 
-
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                dialoggetQuery.setMessage("Login dengan ID " + hasil);
-                dialoggetQuery.show();
-
-            }
+            return null;
         }
+
+        @Override
+        protected void onPreExecute() {
+            dialoggetQuery= new AlertDialog.Builder(LoginMenu.this).create();
+            dialoggetQuery.setTitle("Login Status");
+            dialoggetQuery.setMessage("Lagi check");
+            dialoggetQuery.show();
+
+        }
+
+
+
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dialoggetQuery.setMessage("Login " + hasil);
+            dialoggetQuery.show();
+
+            }
     }
 }
+
 
 
