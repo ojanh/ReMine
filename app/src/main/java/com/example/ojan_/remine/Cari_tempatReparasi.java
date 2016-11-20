@@ -24,7 +24,7 @@ public class Cari_tempatReparasi extends AppCompatActivity {
         * */
 
         ArrayAdapter list_reparasi = new ArrayAdapter(this, R.layout.listview_cari_reparasi); //setup array dari database
-        ListView tampil_list_reparasi = (ListView) findViewById(R.id.List_reparasi); //tampilkan list reparasi
+        ListView tampil_list_reparasi = (ListView) findViewById(R.id.list_reparasi); //tampilkan list reparasi
         tampil_list_reparasi.setAdapter(list_reparasi);
 
     }

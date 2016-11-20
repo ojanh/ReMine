@@ -25,10 +25,11 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/username"
-        android:text="LOGIN"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="213dp" />
+        android:layout_marginBottom="213dp"
+        android:hint="Username"
+        android:background="#FFFFFF"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -39,7 +40,9 @@
         android:layout_marginTop="64dp"
         android:layout_alignTop="@+id/username"
         android:layout_alignEnd="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignStart="@+id/username"
+        android:hint="Password"
+        android:background="#FFFFFF"/>
 
     <Button
         android:layout_width="100dp"
@@ -51,7 +54,7 @@
         android:id="@+id/loginbutton"
         android:layout_below="@+id/pass"
         android:layout_centerHorizontal="true"
-        android:backgroundTint="#FF9F13"/>
+        android:background="#FF9F13"/>
 
 
 

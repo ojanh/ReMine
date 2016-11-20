@@ -22,21 +22,28 @@ import java.net.URLEncoder;
  */
 
 public class DBcomms {
-    String Query; //tipe query hanya Login,GetData,SetData
+    String Query; //tipe query hanya CheckData,GetData,SetData
+    String LoginIP = "http://127.0.0.1/"; //URL link ke php (belom ada)
 
+    //constructors
     public DBcomms(String query) {
          Query = query;
     }
 
-
+    //set IP  baru kalau IP nya bukan Localhost (127.0.0.1)
+    public void setCustomIP(String newIP){
+        LoginIP=newIP;
+    }
 
     //untuk cek data (Buat Login)
-    public String checkData(){
-        String LoginURL = ""; //URL link ke php belom ada cuy
+    public String checkData(String type){
+
         String result="";
         //setup koneksi dengan PHP
                 try {
-                    URL linkURL = new URL(LoginURL); //setURL
+
+                    //setup dengan HTTP port dengan metode POST request
+                    URL linkURL = new URL(LoginIP + "check_data.php"); //setURL
                     HttpURLConnection linkcon = (HttpURLConnection) linkURL.openConnection(); //open port 80 connection
                     linkcon.setRequestMethod("POST"); //request http method
                     linkcon.setDoOutput(true); //set data ke PHP
@@ -48,7 +55,7 @@ public class DBcomms {
 
                     //setup POST HTTP Method yang akan dikirm
                     String Checkdata_inPHP = URLEncoder.encode("sQuery","UTF-8")+"="+URLEncoder.encode(Query,"UTF-8")
-                            +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode("check","UTF-8");
+                            +"&"+URLEncoder.encode("type","UTF-8")+"="+URLEncoder.encode("type","UTF-8");
 
                     //kirim data ke PHP
                     buffWrite.write(Checkdata_inPHP);
@@ -88,16 +95,15 @@ public class DBcomms {
             }
 
 
-
-
-    //getQuery (Buat Request Aplikasi itu sendiri
+    //getQuery (Buat Request SQL table)
     //result berupa JSON Object
     public String getQuery(){
-        String LoginURL = ""; //URL link ke php belom ada cuy
+
         String result="";
+
         //setup koneksi dengan PHP
         try {
-            URL linkURL = new URL(LoginURL); //setURL
+            URL linkURL = new URL(LoginIP + "check_data.php"); //setURL
             HttpURLConnection linkcon = (HttpURLConnection) linkURL.openConnection(); //open port 80 connection
             linkcon.setRequestMethod("POST"); //request http method
             linkcon.setDoOutput(true); //set data ke PHP
@@ -151,7 +157,7 @@ public class DBcomms {
 
 
 
-
+    //setQuery (Data Manipulation (Update dan insert into))
     public void setQuery(){
 
 

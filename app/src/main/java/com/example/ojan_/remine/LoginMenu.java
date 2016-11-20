@@ -30,18 +30,17 @@ public class LoginMenu extends AppCompatActivity {
         usernam = (EditText) findViewById(R.id.username);
         passw = (EditText) findViewById(R.id.pass);
 
-
-        loginBtn.setOnClickListener(new View.OnClickListener() { //saat logi
+        //saat klik loginButton
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String user_nama=usernam.getText().toString(); //ubah data text ke string
 
+                //pindah ke fungsi getData()
                 GetData(usernam.getText().toString(),passw.getText().toString());
 
-                //pindah activity ke MainMenu
-                //
+                //pindah activity ke MainMenu (Temp ke UserView)
                 Intent pindah = new Intent(getApplicationContext(),MainMenu.class);
-                pindah.putExtra("username",user_nama);
+                pindah.putExtra("username",usernam.getText().toString());
                 startActivity(pindah);
             }
 
@@ -56,18 +55,19 @@ public class LoginMenu extends AppCompatActivity {
 
 
     //fungsi GetData
-    public void GetData(final String U1, String U2){
+    public void GetData(final String U1, String U2z){
         class Login extends AsyncTask<String,Void,Void> {
             String username=LoginMenu.this.usernam.getText().toString();//set username
             String password=LoginMenu.this.passw.getText().toString(); //set pass
             AlertDialog dialoggetQuery; //getquery dialog
-
+            String hasil;
             @Override
             protected Void doInBackground(String... params) {
+                //Login query
                 DBcomms checkLogin = new DBcomms
-                        ("SELECT 1 FROM //nama_Tabel WHERE username=" + username + " AND passsword=" + password + ";");
+                        ("SELECT * FROM users WHERE username='" + username + "' AND passsword='" + password + "'");
 
-                String hasil = checkLogin.checkData();
+                hasil= checkLogin.checkData("login");
 
 
                 return null;
@@ -86,7 +86,7 @@ public class LoginMenu extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                dialoggetQuery.setMessage("Login dengan ID" + username);
+                dialoggetQuery.setMessage("Login dengan ID " + hasil);
                 dialoggetQuery.show();
 
             }
