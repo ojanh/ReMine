@@ -16,9 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_above="@+id/username"
         android:layout_centerHorizontal="true"
         android:src="@drawable/remine_logo"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
          />
 
     <EditText
@@ -57,19 +58,29 @@
         android:background="#FF9F13"/>
 
 
-
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:id="@+id/info_seturl"
-        android:hint="Http://127.0.0.1"
+        android:layout_height="wrap_content"
+        android:hint=" (set ip address disini)"
+        android:textAlignment="textStart"
         android:textColorHint="@color/colorPrimaryDark"
         android:background="@color/colorPrimary"
-        android:layout_below="@+id/loginbutton"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginBottom="26dp"
+        android:textSize="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/Text_Http"
+        android:id="@+id/ip_addr_set"/>
 
-
+    <TextView
+        android:text="http://"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_alignBaseline="@+id/ip_addr_set"
+        android:layout_alignBottom="@+id/ip_addr_set"
+        android:layout_toStartOf="@+id/loginbutton"
+        android:id="@+id/Text_Http"/>
 
 
 </RelativeLayout>

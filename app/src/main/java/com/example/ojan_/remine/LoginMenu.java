@@ -26,6 +26,8 @@ public class LoginMenu extends AppCompatActivity {
 
     EditText usernam;
     EditText passw;
+    EditText ip_addr;
+
 
     //create Activity
     @Override
@@ -38,18 +40,23 @@ public class LoginMenu extends AppCompatActivity {
         Button loginBtn = (Button) findViewById(R.id.loginbutton);
         usernam = (EditText) findViewById(R.id.username);
         passw = (EditText) findViewById(R.id.pass);
+        ip_addr= (EditText) findViewById(R.id.ip_addr_set);
 
         //saat klik loginButton
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //save data ke sharedpreferences
+                String URL = "http://" + ip_addr.getText().toString() + "/";
+                shpref(usernam.getText().toString(), ip_addr.getText().toString());
 
                 //pindah ke Class Login (Inner Class)
                 //melakukan komunikasi ke server untuk cek apa user dan password sesuai dengan di server
                 Login login = new Login();
-                login.execute(usernam.getText().toString(), passw.getText().toString());
+                login.execute(usernam.getText().toString(), passw.getText().toString(), URL);
 
                 String role=login.getRoles();
+
 
                 if (role=="toko"){
                     Intent pindah = new Intent(getApplicationContext(),toko_menu.class);
@@ -85,6 +92,7 @@ public class LoginMenu extends AppCompatActivity {
             //Login query
             String username=params[0];
             String password=params[1];
+            String URL =params[2];
 
             //eksekusi data dari username dan password
             DBcomms checkLogin = new DBcomms();
@@ -96,7 +104,7 @@ public class LoginMenu extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
+            checkLogin.setCustomIP(URL);
             hasil_temp=checkLogin.checkData(postEncode);
 
             //konversi JSON ke string untuk data
