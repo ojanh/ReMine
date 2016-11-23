@@ -1,9 +1,11 @@
-package com.example.ojan_.remine;
+package com.example.ojan_.remine.user_mainmenu;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.ojan_.remine.R;
 
 public class Cari_tempatReparasi extends AppCompatActivity {
 

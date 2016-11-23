@@ -26,27 +26,27 @@
 
         <!-- Main Menu -->
         <activity
-            android:name=".MainMenu"
+            android:name=".user_mainmenu.MainMenu"
             android:theme="@style/MainMenuStyle" />
 
         <!-- Menu Reparasi -->
         <activity
-            android:name=".Cari_tempatReparasi"
+            android:name=".user_mainmenu.Cari_tempatReparasi"
             android:theme="@style/MainMenuStyle" />
 
         <!-- Data Bengkel -->
         <activity
-            android:name=".data_bengkel"
+            android:name=".user_mainmenu.data_bengkel"
             android:theme="@style/MainMenuStyle" />
 
         <!-- Alasan Konfirmasi -->
         <activity
-            android:name=".alasan_konfirmasi"
+            android:name=".user_mainmenu.alasan_konfirmasi"
             android:theme="@style/MainMenuStyle" />
 
 
         <activity
-            android:name=".toko_menu"
+            android:name=".toko_mainmenu.toko_menu"
             android:theme="@style/MainMenuStyle"
                    />
     </application>

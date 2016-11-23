@@ -25,7 +25,7 @@ import java.net.URLEncoder;
 
 public class DBcomms {
 
-    String LoginIP = "http://10.5.79.162/"; //IP Address
+    String LoginIP = "http://192.168.8.101/"; //IP Address
 
 
     //set IP  baru kalau IP nya bukan Localhost (127.0.0.1)
