@@ -4,6 +4,8 @@
 
     <!-- Set permission ke internet -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <!-- Setting manifest aplication -->
     <application

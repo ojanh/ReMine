@@ -1,19 +1,27 @@
 package com.example.ojan_.remine.user_mainmenu;
 
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.ojan_.remine.R;
 
 public class Cari_tempatReparasi extends AppCompatActivity {
+    SharedPreferences shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         //tampilkan data ke dalam
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cari_tempat_reparasi);
+
+        String pilihan = getIntent().getStringExtra("pilih");
+
 
         //tambahan sistem:
         /*Google Map Fragment
@@ -30,4 +38,20 @@ public class Cari_tempatReparasi extends AppCompatActivity {
         tampil_list_reparasi.setAdapter(list_reparasi);
 
     }
+
+    class getInfo extends AsyncTask<String,Void,Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String IP_addr= shpref.getString("IP_address","127.0.0.1");
+            Log.d("conn", "IP addr :" + IP_addr );
+
+
+
+            return null;
+        }
+
+
+    }
 }
+

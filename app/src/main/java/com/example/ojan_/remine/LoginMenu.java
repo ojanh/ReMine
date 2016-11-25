@@ -2,12 +2,17 @@ package com.example.ojan_.remine;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,16 +24,19 @@ import com.example.ojan_.remine.user_mainmenu.MainMenu;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 public class LoginMenu extends AppCompatActivity {
 
+    Button loginBtn;
     EditText usernam;
     EditText passw;
     EditText ip_addr;
-
+    String result="s";
 
     //create Activity
     @Override
@@ -38,68 +46,71 @@ public class LoginMenu extends AppCompatActivity {
 
         setContentView(R.layout.activity_login_menu);
 
-        Button loginBtn = (Button) findViewById(R.id.loginbutton);
+        loginBtn = (Button) findViewById(R.id.loginbutton);
         usernam = (EditText) findViewById(R.id.username);
         passw = (EditText) findViewById(R.id.pass);
         ip_addr = (EditText) findViewById(R.id.ip_addr_set);
 
         //saat klik loginButton
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String URL;
-                String role = "";
+                //check koneksi
+                ConnectivityManager connMgr =
+                        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-                //set IP address
-                String ip_addr_set = ip_addr.getText().toString();
-
-                //save data ke sharedpreferences
-                shpref(usernam.getText().toString(), ip_addr.getText().toString());
-
-                //pindah ke Class Login (Inner Class)
-                //melakukan komunikasi ke server untuk cek apa user dan password sesuai dengan di server
-
-                Login login = new Login();
-                //jika kondisi URL nya diisi
-                if (TextUtils.isEmpty(ip_addr_set)) {
-                    Toast.makeText(LoginMenu.this, "no IP", Toast.LENGTH_SHORT).show();
+                //jika ada koneksi langsung eksekusi kalau ngak tampilkan msg gak ada koneksi
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    clickListen();
                 } else {
-                    Toast.makeText(LoginMenu.this, "ada IP", Toast.LENGTH_SHORT).show();
-                    URL = "http://" + ip_addr_set + "/";
-                    login.URL = URL;
-                    Toast.makeText(LoginMenu.this, "URL : " + URL, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginMenu.this, "No connection",Toast.LENGTH_SHORT).show();
                 }
-
-                //get roles
-                try {
-                    role=login.execute(usernam.getText().toString(), passw.getText().toString()).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-                //get roles
-                Toast.makeText(LoginMenu.this, "Roles: " + role, Toast.LENGTH_SHORT).show();
-
-                //pindah activity dengan kondisi role toko atau users
-                intent_change(role);
-                //jika roles adalah toko maka pindah ke activity toko
 
             }
-
-            //fungsi save data dengan shared preferences
-
-
-            ////jika roles adalah user maka pindah ke activity user
-
 
         });
 
     }
 
+    //onclick listen Login Button
+    private void clickListen(){
+        String URL;
+        String role = "";
+
+        //set IP address
+        String ip_addr_set = ip_addr.getText().toString();
+
+        //save data ke sharedpreferences
+        shpref(usernam.getText().toString(), ip_addr.getText().toString());
+
+        //pindah ke Class Login (Inner Class)
+        //melakukan komunikasi ke server untuk cek apa user dan password sesuai dengan di server
+
+        Login login = new Login(LoginMenu.this);
+
+        //jika kondisi URL nya tidak diisi dan diisi
+        if (TextUtils.isEmpty(ip_addr_set)) {
+            Toast.makeText(LoginMenu.this, "no IP, Set to localhost", Toast.LENGTH_SHORT).show();
+        } else {
+
+            URL = "http://" + ip_addr_set + "/";
+            Toast.makeText(LoginMenu.this, "set IP to " + URL, Toast.LENGTH_SHORT).show();
+            login.URL = URL;
+        }
+
+        //get roles
+
+        login.execute(usernam.getText().toString(), passw.getText().toString());
+
+
+
+    }
+
+    //save username dan roles
     private void shpref(String username, String IP_addr) {
-        SharedPreferences shpref = getSharedPreferences("Init", Context.MODE_PRIVATE);
+        SharedPreferences shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor sheditor = shpref.edit();
         sheditor.putString("username", username);
         sheditor.putString("IP_address", IP_addr);
@@ -107,6 +118,7 @@ public class LoginMenu extends AppCompatActivity {
 
     }
 
+    //pindah intent
     private void intent_change(String role){
         Toast.makeText(LoginMenu.this, "pindah fungsi dengan Role: " + role, Toast.LENGTH_SHORT).show();
 
@@ -127,16 +139,39 @@ public class LoginMenu extends AppCompatActivity {
 
     }
 
-    class Login extends AsyncTask<String, Void, String> {
+    //bikin thread baru untuk login
+    class Login extends AsyncTask<String, Void, Boolean> {
 
-        AlertDialog dialoggetQuery; //getquery dialog
+
+        AlertDialog.Builder dialoggetQuery; //getquery dialog
         String hasil_temp;
         String roles;
         String message;
         public String URL = "1";
+        boolean isNoConnection = false;
+
+        public Login (Context ctx){
+            dialoggetQuery = new AlertDialog.Builder(ctx);
+            dialoggetQuery.setTitle("Login Status");
+            dialoggetQuery.setMessage("Lagi check");
+            dialoggetQuery.setNegativeButton("Cancel", dialoggetQueryListener);
+
+
+        }
+
+        DialogInterface.OnClickListener dialoggetQueryListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        cancel(true);
+
+                    }
+                };
+
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
             //Login query
             String username = params[0];
             String password = params[1];
@@ -145,6 +180,8 @@ public class LoginMenu extends AppCompatActivity {
             //eksekusi data dari username dan password
             DBcomms checkLogin = new DBcomms();
             String postEncode = "";
+
+            //buat httpPOST data
             try {
                 postEncode = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8")
                         + "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8")
@@ -152,54 +189,79 @@ public class LoginMenu extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+
             //Set URL Link jika URL ada (Tidak 1)
             if (URL != "1") {
+                Log.d("URL", "tidak ada URL");
                 checkLogin.setCustomIP(URL);
             }
 
-            hasil_temp = checkLogin.checkData(postEncode);
 
-            //konversi JSON ke string untuk data
+            //eksekusi http communication dan dapatkan data nya
+
+
             try {
-                JSONObject assemb_result = new JSONObject(hasil_temp);
-                roles = assemb_result.getString("roles");
-                message = assemb_result.getString("info");
-            } catch (JSONException e) {
+                hasil_temp = checkLogin.login_check(postEncode);
+                Log.d("Conn", "input stream: " + hasil_temp);
+                return true;
+
+            } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
 
 
-            return roles;
         }
 
         @Override
         protected void onPreExecute() {
-            dialoggetQuery = new AlertDialog.Builder(LoginMenu.this).create();
-            dialoggetQuery.setTitle("Login Status");
-            dialoggetQuery.setMessage("Lagi check");
             dialoggetQuery.show();
 
 
         }
 
         @Override
-        protected void onPostExecute(String aVoid) {
+        protected void onPostExecute(Boolean aVoid) {
+            Log.d("conn", "nilai out = "+ hasil_temp + ", Koneksi : " + isNoConnection + aVoid);
 
-            //menampilkan dialog sudah dapat
-            dialoggetQuery.setMessage(message + ", Role: " + roles);
-            dialoggetQuery.show();
+            //jika ada koneksi, cek roles dan pindah intent, kalau tidak ya close thread koneksi
+            if (hasil_temp!=null && hasil_temp.length() > 0){
+
+                //konversi JSON ke message tertentu
+                try {
+                    JSONObject assemb_result = new JSONObject(hasil_temp);
+                    roles = assemb_result.getString("roles");
+                    message = assemb_result.getString("info");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //menampilkan dialog sudah dapat
+                dialoggetQuery.setMessage(message + ", Role: " + roles);
+                dialoggetQuery.show();
+
+                Log.d("out","Roles: " + roles);
+
+                //pindah activity dengan kondisi role toko atau users
+                intent_change(roles);
+            }
+
+            else {
+                Toast.makeText(LoginMenu.this, "tak ada koneksi, coba ulang lagi atau Set IP nya", Toast.LENGTH_SHORT).show();
+                cancel(true);
+            }
+
+
+
+
+
 
 
 
         }
 
 
-
-
-
-
-        }
-
+    }
 
 
 }
