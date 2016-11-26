@@ -11,13 +11,26 @@
     tools:context="com.example.ojan_.remine.user_mainmenu.Cari_tempatReparasi">
 
 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        map:cameraZoom="13"
+        map:mapType="normal"
+        map:liteMode="true"
+        tools:layout="@layout/frame_googlemaps" />
+
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/list_reparasi"/>
+        android:id="@+id/list_reparasi"
+        android:layout_below="@id/map"
+         />
 
 
 
