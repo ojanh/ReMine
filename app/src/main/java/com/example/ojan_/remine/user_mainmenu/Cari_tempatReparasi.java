@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.ojan_.remine.DBcomms;
 import com.example.ojan_.remine.Dumbs.GetGPS;
 import com.example.ojan_.remine.R;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -91,7 +93,8 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         posLatLng = new LatLng(position[0], position[1]);
-
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(posLatLng);
+        mGoogleMap.moveCamera(camUpdate);
     }
 
     //get data dari internet

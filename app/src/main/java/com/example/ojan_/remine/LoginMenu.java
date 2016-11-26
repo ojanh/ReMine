@@ -1,6 +1,7 @@
 package com.example.ojan_.remine;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -163,7 +164,7 @@ public class LoginMenu extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.dismiss();
                         cancel(true);
 
                     }
@@ -247,6 +248,7 @@ public class LoginMenu extends AppCompatActivity {
             }
 
             else {
+
                 Toast.makeText(LoginMenu.this, "tak ada koneksi, coba ulang lagi atau Set IP nya", Toast.LENGTH_SHORT).show();
                 cancel(true);
             }

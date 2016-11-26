@@ -31,7 +31,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         //set setelah activity ditampilkan
-        username=(TextView) findViewById(R.id.username_loginMenu);
+
         welcome_menu=(TextView) findViewById(R.id.MainMenu_welcome_text);
         radio_button=(ImageButton) findViewById(R.id.radioservice_button);
         tv_button=(ImageButton) findViewById(R.id.tv_icon);
