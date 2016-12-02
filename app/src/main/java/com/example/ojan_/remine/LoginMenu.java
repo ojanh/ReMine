@@ -119,7 +119,7 @@ public class LoginMenu extends AppCompatActivity {
 
     }
 
-    //pindah intent
+    //pindah activity
     private void intent_change(String role){
         Toast.makeText(LoginMenu.this, "pindah fungsi dengan Role: " + role, Toast.LENGTH_SHORT).show();
 

@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5pt"
+    android:paddingBottom="5pt">
 
    <TextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:text="Alasan"
        android:id="@+id/alasan_tulisan"
+       android:layout_marginTop="12dp"
+       android:layout_marginStart="10dp"
+       android:textSize="11pt"
        />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_pilih"
+        android:layout_marginEnd="16dp"
+        android:layout_alignBaseline="@+id/alasan_tulisan"
+        android:layout_alignBottom="@+id/alasan_tulisan"
+        android:layout_alignParentEnd="true" />
 
 
-</LinearLayout>
+</RelativeLayout>

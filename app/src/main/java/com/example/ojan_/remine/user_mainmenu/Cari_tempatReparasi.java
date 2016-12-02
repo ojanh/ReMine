@@ -1,30 +1,36 @@
 package com.example.ojan_.remine.user_mainmenu;
 
-import android.Manifest;
-import android.app.ProgressDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.ojan_.remine.Custom_listview.Adapter_cari_reparasi;
+import com.example.ojan_.remine.Custom_listview.Toko_reparasi;
 import com.example.ojan_.remine.DBcomms;
 import com.example.ojan_.remine.Dumbs.GetGPS;
 import com.example.ojan_.remine.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,12 +56,17 @@ import java.util.List;
 public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReadyCallback {
 
     //initial objects and variables
-    SharedPreferences shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    SharedPreferences shpref;
     String pilihan;
+
+    ProgressBar pgBar;
+    ListView tampil_list_reparasi;
 
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
     LatLng posLatLng;
+
+
     double[] position = new double[]{0.00000, 0.0000}; //{latitude, Longitude}
 
 
@@ -69,17 +80,51 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
         setContentView(R.layout.activity_cari_tempat_reparasi);
 
         pilihan = getIntent().getStringExtra("pilih");
+        shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pgBar = (ProgressBar) findViewById(R.id.progressBar_getListBengkel);
+        tampil_list_reparasi = (ListView) findViewById(R.id.list_reparasi); //tampilkan list reparasi
 
+        checkApi();
         initMap();
+        checkGPS();
+
+        Intent intent = getIntent();
+        String kategori= intent.getStringExtra("pilih");
+
+        Log.d("data", "kategori: " +  kategori);
+
+        new GetInfo().execute(String.valueOf(position[0]), String.valueOf(position[1]),kategori);
 
 
-        ArrayAdapter list_reparasi = new ArrayAdapter(this, R.layout.listview_cari_reparasi); //setup array dari database
-        ListView tampil_list_reparasi = (ListView) findViewById(R.id.list_reparasi); //tampilkan list reparasi
-        tampil_list_reparasi.setAdapter(list_reparasi);
 
 
 
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        /*posLatLng = new LatLng(0.0000, 0.00000);
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(posLatLng);
+        mGoogleMap.moveCamera(camUpdate);*/
+
+        moveGMap(1.0000,1.00000);
+        mGoogleMap.setMyLocationEnabled(true);
+
+    }
+
+    private void checkApi() {
+        GoogleApiAvailability gugelAPI = GoogleApiAvailability.getInstance();
+        int isAvailable = gugelAPI.isGooglePlayServicesAvailable(this);
+        if (!(isAvailable == ConnectionResult.SUCCESS)){
+            Log.d("GPS", "no GPlay service");
+            Toast.makeText(this, "can't connect to google play services", Toast.LENGTH_SHORT).show();
+        }
+        else if (gugelAPI.isUserResolvableError(isAvailable)){
+            Dialog dialog = gugelAPI.getErrorDialog(this, isAvailable, 0);
+            dialog.show();
+        }
 
     }
 
@@ -89,68 +134,160 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        posLatLng = new LatLng(position[0], position[1]);
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(posLatLng);
-        mGoogleMap.moveCamera(camUpdate);
+    private void checkGPS() {
+        GetGPS getGPS = new GetGPS(getApplicationContext());
+
+        getGPS.getLocation();
+        boolean isNotAllowed = getGPS.isNotAllowed();
+
+        if (isNotAllowed){
+            Log.d("GPS", "Not Allowed");
+
+        }
+        else {
+            position[0]=getGPS.getLatitude();
+            position[1]=getGPS.getLongitude();
+            Toast.makeText(this, "Posisi :: Lintang: " + position[0] + ",Bujur: " + position[1] , Toast.LENGTH_LONG).show();
+
+            /*moveGMap(position[0],position[1]);*/
+        }
+
     }
 
+    private void setListBengkel(String hasil)  {
+        int i;
+
+        final ArrayList<String> id_toko = new ArrayList<>();
+        ArrayList<String> nama_bengkel = new ArrayList<>();
+        ArrayList<Double> lintang = new ArrayList<>();
+        ArrayList<Double> bujur = new ArrayList<>();
+
+        try {
+            JSONArray jsonArHasil = new JSONArray(hasil);
+
+            for (i = 0 ; i < jsonArHasil.length(); i++){
+                JSONObject jsonObHasil = jsonArHasil.getJSONObject(i);
+
+                id_toko.add(jsonObHasil.getString("toko_id"));
+                nama_bengkel.add(jsonObHasil.getString("nama_toko"));
+                lintang.add(Double.parseDouble(jsonObHasil.getString("lokasi_lintang")));
+                bujur.add(Double.parseDouble(jsonObHasil.getString("lokasi_bujur")));
+
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("JSONparse", "toko_id: " + id_toko.toString());
+        Log.d("JSONparse", "nama: " + nama_bengkel.toString());
+        Log.d("JSONparse", "lintang: " + lintang.toString());
+        Log.d("JSONparse", "bujur: " + bujur.toString());
+
+        //Declare listview dan array list dari toko
+        List<Toko_reparasi> mTokoReparasi = new ArrayList<>();
+        Adapter_cari_reparasi adapterCariReparasi;
+        ListView listView_reparasi = (ListView) findViewById(R.id.list_reparasi);
+
+        //menampilkan list view
+        for (i=0; i < id_toko.size(); i++){
+            mTokoReparasi.add(new Toko_reparasi(i, nama_bengkel.get(i), lintang.get(i), bujur.get(i)));
+            Log.d("adapter", "hasil adapter2: " + mTokoReparasi.get(i).getNama_toko());
+        }
+
+//        Log.d("adapter", "hasil adapter: " + mTokoReparasi.toString());
+
+        adapterCariReparasi = new Adapter_cari_reparasi(getApplicationContext(), mTokoReparasi);
+        listView_reparasi.setAdapter(adapterCariReparasi);
+
+
+        Log.d("adapter", "isSetted? " + listView_reparasi.isActivated() );
+
+
+        listView_reparasi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                int id_clicked = Integer.parseInt(view.getTag().toString());
+                Log.d("ClickList", "ID: " + id_clicked);
+                Log.d("ClickList", "ID toko yang di click :" + id_toko.get(id_clicked));
+
+                SharedPreferences.Editor shEditor = shpref.edit();
+                shEditor.putString("kategori", pilihan).apply();
+
+                /*pindahActivity(id_toko.get(id_clicked));*/
+
+
+            }
+        });
+
+
+
+
+    }
+
+    private void moveGMap(double v, double v1) {
+        posLatLng = new LatLng(v, v1);
+        CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(posLatLng);
+        mGoogleMap.moveCamera(camUpdate);
+
+    }
+
+    private void pindahActivity(String s) {
+        Intent pindahActivity = new Intent(getApplicationContext(), data_bengkel.class);
+        pindahActivity.putExtra("id_toko", s);
+        startActivity(pindahActivity);
+
+    }
+
+
+
     //get data dari internet
-    class getInfo extends AsyncTask<String, Void, String> {
-        ProgressDialog pgDialog = new ProgressDialog(Cari_tempatReparasi.this);
-        double longitude,latitude;
+    class GetInfo extends AsyncTask<String, Void, String> {
 
 
         @Override
         protected String doInBackground(String... params) {
             //set IP address
+            String latitude=params[0];
+            String longitude=params[1];
+            String kategori_pilihan = params[2];
             String IP_addr = shpref.getString("IP_address", "192.168.8.101");
+
 
             //set URL dan dapatkan Lokasi
             String URL = "http://" + IP_addr + "/";
             Log.d("conn", "URL address: " + URL);
 
-            checkGPS();
 
             DBcomms getBengkel = new DBcomms();
-            String query = "SELECT * FROM list_toko WHERE kategori='" + pilihan + "'";
-            Log.d("query: ", query);
+            getBengkel.setCustomIP(URL);
+
 
             String postData = " ";
-
-            String hasil = null;
+            String hasil = " ";
             try {
-                postData = URLEncoder.encode("query", "UTF-8") + "=" + URLEncoder.encode(query, "UTF-8");
-                hasil = getBengkel.getQuery(postData);
+                postData = URLEncoder.encode("latitude", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(latitude), "UTF-8")
+                        + "&" + URLEncoder.encode("longitude", "UTF-8")+"="+URLEncoder.encode(String.valueOf(longitude), "UTF-8")
+                        + "&" + URLEncoder.encode("kategori", "UTF-8")+"="+URLEncoder.encode(kategori_pilihan, "UTF-8");
+
+                Log.d("conn", "postData: " + postData);
+                hasil = getBengkel.customQuery("php_file/check_toko.php", postData);
+
+
+
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.d("conn", e.getMessage());
             }
 
 
             return hasil;
-        }
-
-        private void checkGPS() {
-            GetGPS getGPS = new GetGPS(getApplicationContext());
-
-            getGPS.getLocation();
-            boolean isNotAllowed = getGPS.isNotAllowed();
-
-            if (isNotAllowed){
-                requestPermissions(new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET},
-                        10);
-
-            }
-
-            longitude=getGPS.getLongitude();
-            latitude=getGPS.getLatitude();
-
         }
 
         @Override
@@ -160,19 +297,27 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
         @Override
         protected void onPostExecute(String hasil) {
+            pgBar.setVisibility(View.INVISIBLE);
 
+            //jika hasil = null, maka muncul toast tak ada koneksi dan thread di stop
             if (hasil != null){
                 Log.d("conn", "hasil: " + hasil);
-
+                setListBengkel(hasil);
             }
-
             else {
-                Toast.makeText(getApplicationContext(), "Tak ada koneksi, tak ada data masuk", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Tak ada koneksi, tak ada data masuk", Toast.LENGTH_LONG).show();
                 cancel(true);
+
+
             }
 
         }
+
+
+
     }
+
+
 
 
 }

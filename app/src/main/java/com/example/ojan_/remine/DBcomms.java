@@ -130,6 +130,16 @@ public class DBcomms {
         return result;
     }
 
+    public String customQuery (String php_file, String postEncode) throws IOException {
+        String result = "";
+
+        result=HTTPconnection(php_file, postEncode);
+
+        return result;
+
+    }
+
+
     //koneksi dengan HTTP (Function)
     String HTTPconnection(String PHP_FilePath, String PostData) throws IOException {
         String result = " ";
@@ -137,6 +147,9 @@ public class DBcomms {
 
             //setup dengan HTTP port dengan metode POST request
             URL linkURL = new URL(LoginIP + PHP_FilePath); //setURL
+            Log.d("conn", "URL: " +linkURL.toString());
+
+
             HttpURLConnection linkcon = (HttpURLConnection) linkURL.openConnection(); //open port 80 connection
             linkcon.setRequestMethod("POST"); //request http method
             linkcon.setConnectTimeout(500);
@@ -144,22 +157,24 @@ public class DBcomms {
             linkcon.setDoInput(true); //get data dari PHP
 
 
-            //check apa koneksinya ada
-            int isConnected=linkcon.getResponseCode();
 
-            if (isConnected<200 || isConnected>=400){
-                Log.d("conn", "no connection");
-                return "no";
-            }
 
             //kirim data ke PHP buat SQLquerying
-            OutputStream outStream = linkcon.getOutputStream(); //set untuk kirim data
-            BufferedWriter buffWrite = new BufferedWriter(new OutputStreamWriter(outStream, "UTF-8")); //setup text pengiriman
+            OutputStream out = linkcon.getOutputStream(); //set untuk kirim data
+            BufferedWriter buffWrite = new BufferedWriter(new OutputStreamWriter(out, "UTF-8")); //setup text pengiriman
 
             //setup POST HTTP Method yang akan dikirm, lal
             buffWrite.write(PostData);
             buffWrite.flush(); //hapus buffer
             buffWrite.close(); //close buffer
+
+            /*//check apa koneksinya ada
+            int isConnected=linkcon.getResponseCode();
+
+            if (isConnected<200 || isConnected>=400){
+                Log.d("conn", "no connection");
+                return "no";
+            }*/
 
             //Ambil data dari PHP (Hasil SQLquerying)
             InputStream inStream = linkcon.getInputStream();

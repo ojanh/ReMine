@@ -79,7 +79,7 @@
         android:id="@+id/komputer_icon"
         android:onClick=""/>
 
-    <!--tulisan tv service -->
+    <!--tulisan komputer service -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,9 +87,9 @@
         android:text="Komputer"
         android:textSize="15pt"
         android:id="@+id/text_servicekomputer"
+        android:layout_marginBottom="6dp"
         android:layout_alignBottom="@+id/komputer_icon"
-        android:layout_alignEnd="@+id/MainMenu_welcome_text"
-        android:layout_marginBottom="3pt"/>
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

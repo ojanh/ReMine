@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by ojan_ on 25/11/2016.
@@ -29,9 +31,6 @@ import android.util.Log;
  * dalam request lokasi ada 4 variabel yaitu time
  */
 public class GetGPS extends Service implements LocationListener {
-
-    boolean canGetLocation = false;
-    Activity activity;
 
     Location location; // location
     double latitude; // latitude
@@ -48,7 +47,7 @@ public class GetGPS extends Service implements LocationListener {
     protected LocationManager locationManager;
     Context ctx;
 
-
+    //constructor GetGPS
     public GetGPS(Context ctx) {
         this.ctx = ctx;
         locationManager = (LocationManager) ctx.getSystemService(LOCATION_SERVICE);
@@ -56,23 +55,49 @@ public class GetGPS extends Service implements LocationListener {
 
 
     public Location getLocation() {
+        boolean networkEn, gpsHiEn;
+        Criteria criteria = new Criteria();
 
         //cek permissions apakah di granted atau tidak
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Permissons", "Permit Deny atau yang lain untuk ACCESS_FINE_LOCATION DAN ACCESS_COARSE_LOCATION");
-            isNotAllowed= true ;
-        }
-        else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, update_berdasrkanWaktu,
-                    update_berdasarkanJarak, this);
-            latitude=location.getLatitude();
-            longitude=location.getLongitude();
+            isNotAllowed = true;
+        } else {
+
+            //set criteria untuk akurasi dan kecepatan
+
+
+            //get gps data
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                GPSdata(LocationManager.NETWORK_PROVIDER);
+
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                    GPSdata(LocationManager.GPS_PROVIDER);
+                }
+
+            } else {
+                Toast.makeText(ctx, "Maaf, GPS anda belum dinyalakan", Toast.LENGTH_LONG).show();
+            }
+
         }
 
         return location;
 
 
+    }
 
+    private void GPSdata(String provider) {
+        location = locationManager.getLastKnownLocation(provider);
+
+        if (location != null){
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            Log.d("GPS", "latitude: " + String.valueOf(latitude) + ", longitude: " + String.valueOf(longitude));
+
+        }
+        else {
+            Log.d("GPS ", "GPS data tidak ada");
+        }
 
     }
 
@@ -88,10 +113,13 @@ public class GetGPS extends Service implements LocationListener {
         return latitude;
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
 
+
     }
+
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -115,6 +143,8 @@ public class GetGPS extends Service implements LocationListener {
 
                     }
                 });
+
+        noGPSDialog.show();
     }
 
     @Nullable
