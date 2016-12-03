@@ -19,7 +19,8 @@
         android:layout_height="200dp"
         map:cameraZoom="16"
         map:mapType="normal"
-        map:liteMode="true"
+        map:uiTiltGestures="true"
+        map:uiZoomGestures="true"
         tools:layout="@layout/frame_googlemaps" />
 
     <FrameLayout

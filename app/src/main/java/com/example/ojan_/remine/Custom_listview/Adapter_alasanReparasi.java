@@ -4,6 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+import com.example.ojan_.remine.R;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -37,7 +43,14 @@ public class Adapter_alasanReparasi extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        View listV = View.inflate(mContext, R.layout.listview_alasan_reparasi, null);
+        TextView text_alasan = (TextView) listV.findViewById(R.id.alasan_tulisan);
+        CheckBox checkBox_pilih = (CheckBox) listV.findViewById(R.id.checkBox_pilih);
 
-        return null;
+        text_alasan.setText(mAlasan_reparasi.get(position).getAlasan());
+
+        listV.setTag(mAlasan_reparasi.get(position).getId());
+
+        return listV;
     }
 }
