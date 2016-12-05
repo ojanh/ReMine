@@ -200,7 +200,6 @@ public class LoginMenu extends AppCompatActivity {
 
             //eksekusi http communication dan dapatkan data nya
 
-
             try {
                 hasil_temp = checkLogin.login_check(postEncode);
                 Log.d("Conn", "input stream: " + hasil_temp);
@@ -238,7 +237,7 @@ public class LoginMenu extends AppCompatActivity {
                 }
 
                 //menampilkan dialog sudah dapat
-                dialoggetQuery.setMessage(message + ", Role: " + roles);
+                dialoggetQuery.setMessage(message);
                 dialoggetQuery.show();
 
                 Log.d("out","Roles: " + roles);

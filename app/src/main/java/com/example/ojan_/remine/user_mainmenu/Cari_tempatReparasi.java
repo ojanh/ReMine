@@ -76,7 +76,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
     GoogleApiClient mGoogleApiClient;
 
 
-    double[] position = new double[]{0.00000, 0.0000}; //{latitude, Longitude}
+    double[] posKoordinat = new double[]{0.00000, 0.0000}; //{latitude, Longitude}
 
 
     //tampilkan data ke dalam
@@ -105,7 +105,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
         Log.d("data", "kategori: " +  kategori);
 
-        new GetInfo().execute(String.valueOf(position[0]), String.valueOf(position[1]),kategori);
+        new GetInfo().execute(String.valueOf(posKoordinat[0]), String.valueOf(posKoordinat[1]),kategori);
 
 
 
@@ -120,7 +120,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
 
         mGoogleMap.setMyLocationEnabled(true);
-        moveGMap(position[0],position[1]);
+        moveGMap(posKoordinat[0],posKoordinat[1]);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this)
                                 .addOnConnectionFailedListener(this).build();
@@ -159,21 +159,13 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
         }
         else {
-            position[0]=getGPS.getLatitude();
-            position[1]=getGPS.getLongitude();
-            Toast.makeText(this, "Posisi :: Lintang: " + position[0] + ",Bujur: " + position[1] , Toast.LENGTH_LONG).show();
+            posKoordinat[0]=getGPS.getLatitude();
+            posKoordinat[1]=getGPS.getLongitude();
+            Toast.makeText(this, "Posisi :: Lintang: " + posKoordinat[0] + ",Bujur: " + posKoordinat[1] , Toast.LENGTH_LONG).show();
 
 
         }
 
-    }
-
-    private void goToLocation(double v, double v1, float zoom) {
-        Log.d("GMAP d3", "GMAP var is ? " + mGoogleMap);
-
-        LatLng posLatLng = new LatLng(v, v1);
-        CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(posLatLng, zoom);
-        mGoogleMap.moveCamera(camUpdate);
     }
 
     private void setListBengkel(String hasil)  {
@@ -182,7 +174,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
         final ArrayList<String> id_toko = new ArrayList<>();
         final ArrayList<String> nama_bengkel = new ArrayList<>();
         final ArrayList<String> alamat_bengkel = new ArrayList<>();
-        ArrayList<Double> lintang = new ArrayList<>();
+        final ArrayList<Double> lintang = new ArrayList<>();
         ArrayList<Double> bujur = new ArrayList<>();
 
 
@@ -200,7 +192,6 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
 
             }
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -223,17 +214,15 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
             Log.d("adapter", "hasil adapter2: " + mTokoReparasi.get(i).getNama_toko());
         }
 
-
-
         adapterCariReparasi = new Adapter_cari_reparasi(getApplicationContext(), mTokoReparasi);
         listView_reparasi.setAdapter(adapterCariReparasi);
+
 
         //menampilkan marker dari tempat
         for (i=0; i < id_toko.size(); i++){
             mGoogleMap.addMarker(new MarkerOptions().
                     position(new LatLng(lintang.get(i), bujur.get(i))).title(nama_bengkel.get(i)));
         }
-
 
 
         listView_reparasi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -245,16 +234,16 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
                 Log.d("ClickList", "ID toko yang di click :" + id_toko.get(id_clicked));
 
                 SharedPreferences.Editor shEditor = shpref.edit();
-                shEditor.putString("kategori", pilihan).apply();
+                shEditor.putString("kategori", pilihan);
+                shEditor.putString("lintang",String.valueOf(posKoordinat[0]))
+                        .putString("bujur",String.valueOf(posKoordinat[1]));
+                shEditor.apply();
 
-                pindahActivity(nama_bengkel.get(position), alamat_bengkel.get(position));
 
+                pindahActivity(nama_bengkel.get(position), alamat_bengkel.get(position),id_toko.get(position));
 
             }
         });
-
-
-
 
     }
 
@@ -267,10 +256,11 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
-    private void pindahActivity(String nama_toko, String alamat_toko) {
-        Intent pindahActivity = new Intent(getApplicationContext(), data_bengkel.class);
+    private void pindahActivity(String nama_toko, String alamat_toko, String toko_id) {
+        Intent pindahActivity = new Intent(getApplicationContext(), alasan_konfirmasi.class);
         pindahActivity.putExtra("nama_toko", nama_toko);
         pindahActivity.putExtra("alamat_toko", alamat_toko);
+        pindahActivity.putExtra("toko_id", toko_id);
         startActivity(pindahActivity);
 
     }
@@ -283,6 +273,8 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
             Toast.makeText(this, "Can't get Current Location", Toast.LENGTH_SHORT).show();
         }
         else {
+            posKoordinat[0]=location.getLatitude();
+            posKoordinat[1]=location.getLongitude();
             LatLng kordinat = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate update =  CameraUpdateFactory.newLatLngZoom(kordinat, 15);
             mGoogleMap.animateCamera(update);

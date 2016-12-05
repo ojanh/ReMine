@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ojan_.remine.R;
 
@@ -20,6 +21,9 @@ public class MainMenu extends AppCompatActivity {
     ImageButton tv_button;
     ImageButton komputer_button;
     Button gotoTest_button;
+
+
+    int manyPressedBack = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,19 @@ public class MainMenu extends AppCompatActivity {
         startActivity(radioActivity);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (manyPressedBack>=1){
+            Intent closeApp = new Intent(Intent.ACTION_MAIN);
+            closeApp.addCategory(Intent.CATEGORY_HOME);
+            closeApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(closeApp);
+        }
+        else {
+            Toast.makeText(this, "press back again to close this app", Toast.LENGTH_LONG).show();
+            manyPressedBack++;
+        }
+    }
 
 }
 

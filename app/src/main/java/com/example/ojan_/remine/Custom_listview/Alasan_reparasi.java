@@ -10,12 +10,14 @@ public class Alasan_reparasi {
 
     private int id;
     private boolean isChecked;
-    private String Alasan;
+    private String alasan;
+    private int harga;
 
-    public Alasan_reparasi(int id, boolean isChecked, String alasan) {
+    public Alasan_reparasi(int id, boolean isChecked, String alasan, int harga) {
         this.id = id;
         this.isChecked = isChecked;
-        Alasan = alasan;
+        this.alasan = alasan;
+        this.harga = harga;
     }
 
     public int getId() {
@@ -35,10 +37,18 @@ public class Alasan_reparasi {
     }
 
     public String getAlasan() {
-        return Alasan;
+        return alasan;
     }
 
     public void setAlasan(String alasan) {
-        Alasan = alasan;
+        alasan = alasan;
+    }
+
+    public int getHarga() {
+        return harga;
+    }
+
+    public void setHarga(int harga) {
+        this.harga = harga;
     }
 }

@@ -26,5 +26,26 @@
         android:layout_alignBottom="@+id/alasan_tulisan"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listview_alasanReparasi_harga"
+        android:text="Harga"
+        android:textSize="8pt"
+        android:layout_alignBaseline="@+id/checkBox_pilih"
+        android:layout_alignBottom="@+id/checkBox_pilih"
+        android:layout_toStartOf="@+id/checkBox_pilih"
+        android:textAlignment="textEnd"
+        android:layout_marginEnd="3dp"/>
+
+    <TextView
+        android:text="Rp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_rupiah"
+        android:layout_marginEnd="7dp"
+        android:layout_alignTop="@+id/listview_alasanReparasi_harga"
+        android:layout_toStartOf="@+id/listview_alasanReparasi_harga" />
+
 
 </RelativeLayout>

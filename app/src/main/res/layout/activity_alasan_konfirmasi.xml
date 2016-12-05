@@ -38,6 +38,7 @@
         android:id="@+id/alasanReparasi_listView_alasanReparasi"
         android:layout_below="@+id/alasanReparasi_text_alamatToko"
         android:layout_alignParentStart="true"
+        android:layout_above="@+id/alasanReparasi_editText_alasanLain"
         android:layout_marginTop="14dp" />
 
     <EditText
@@ -51,16 +52,6 @@
         android:layout_marginEnd="7dp"
         android:id="@+id/alasanReparasi_editText_alasanLain" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/alasanReparasi_text_totalHarga"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/alasanReparasi_editText_alasanLain"
-        android:layout_alignEnd="@+id/alasanReparasi_button_konfirmasi"
-        android:layout_marginEnd="64dp" />
-
     <Button
         android:layout_width="100dp"
         android:layout_height="35dp"
@@ -70,11 +61,28 @@
         android:textStyle="bold"
         android:textColor="#FFFF"
         android:id="@+id/alasanReparasi_button_konfirmasi"
-        android:onClick="konfirmasi"
         android:layout_below="@+id/alasanReparasi_editText_alasanLain"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alasanReparasi_totalHarga"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/alasanReparasi_editText_alasanLain"
+        android:layout_alignEnd="@+id/alasanReparasi_editText_alasanLain"
+        android:textAlignment="textStart"/>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alasanReparasi_text_harga"
+        android:text="Harga Total: Rp"
+        android:layout_alignBaseline="@+id/alasanReparasi_totalHarga"
+        android:layout_alignBottom="@+id/alasanReparasi_totalHarga"
+        android:layout_toStartOf="@+id/alasanReparasi_totalHarga"
+        android:layout_marginEnd="10dp" />
 
 </RelativeLayout>

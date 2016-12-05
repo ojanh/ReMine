@@ -1,56 +1,106 @@
 package com.example.ojan_.remine.Custom_listview;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.ojan_.remine.R;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ojan_ on 02/12/2016.
  */
 
-public class Adapter_alasanReparasi extends BaseAdapter{
-    private Context mContext;
-    private List<Alasan_reparasi> mAlasan_reparasi;
+public class Adapter_alasanReparasi extends ArrayAdapter<Alasan_reparasi>{
+    Context ctx;
+    CheckBox checkBox_contreng;
 
-    public Adapter_alasanReparasi(Context mContext, List<Alasan_reparasi> mAlasan_reparasi) {
-        this.mContext = mContext;
-        this.mAlasan_reparasi = mAlasan_reparasi;
+    List<Alasan_reparasi> listObject;
+    ArrayList<String> alasan_build= new ArrayList<>();
+
+    int lViewId;
+    int total = 0;
+
+    public Adapter_alasanReparasi(Context context, int resource, List<Alasan_reparasi> objects) {
+        super(context, resource, objects);
+        this.ctx=context;
+        this.listObject=objects;
+
     }
 
-    @Override
-    public int getCount() {
-        return mAlasan_reparasi.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mAlasan_reparasi.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View listV = View.inflate(mContext, R.layout.listview_alasan_reparasi, null);
-        TextView text_alasan = (TextView) listV.findViewById(R.id.alasan_tulisan);
-        CheckBox checkBox_pilih = (CheckBox) listV.findViewById(R.id.checkBox_pilih);
+        View v = convertView;
 
-        text_alasan.setText(mAlasan_reparasi.get(position).getAlasan());
+        if (v==null){
+            Log.d("ViewLog", "view is null");
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.listview_alasan_reparasi,null);
 
-        listV.setTag(mAlasan_reparasi.get(position).getId());
+        }
 
-        return listV;
+        TextView alasan_text = (TextView) v.findViewById(R.id.alasan_tulisan);
+        checkBox_contreng= (CheckBox) v.findViewById(R.id.checkBox_pilih);
+        TextView harga_text = (TextView) v.findViewById(R.id.listview_alasanReparasi_harga);
+
+
+
+        checkBox_contreng.setTag(position);
+
+        alasan_text.setText(listObject.get(position).getAlasan());
+        harga_text.setText(String.valueOf(listObject.get(position).getHarga()));
+
+
+        checkBox_contreng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int position = (int) buttonView.getTag();
+                Log.d("Click", "Position clicked: " + position);
+                Log.d("Click", "checkbox changed to? " + isChecked);
+
+
+                if(isChecked){
+                    total+=listObject.get(position).getHarga();
+                    Log.d("tambah", "nilai total skrg adalah : " + total);
+                    alasan_build.add(listObject.get(position).getAlasan());
+                }
+                else {
+                    if(total>0 && alasan_build.size()>0){
+                        total-=listObject.get(position).getHarga();
+                        alasan_build.remove(listObject.get(position).getAlasan());
+                    }
+                }
+
+                TextView setTotal = (TextView)
+                        ((Activity)ctx).findViewById(R.id.alasanReparasi_totalHarga);
+
+                setTotal.setText(String.valueOf(total));
+
+                Log.d("Click", "Data Alasan: " + alasan_build.toString());
+            }
+        });
+
+
+        return v;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public ArrayList<String> getAlasan_build() {
+        return alasan_build;
     }
 }
+
