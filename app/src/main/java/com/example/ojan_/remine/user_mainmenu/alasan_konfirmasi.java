@@ -1,11 +1,14 @@
 package com.example.ojan_.remine.user_mainmenu;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -30,7 +33,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
     ListView list_alasan;
     EditText alasan_lain;
     List<Alasan_reparasi> list_reparasi = new ArrayList<>();
-
+    EditText alasan_lain;
 
 
     @Override
@@ -52,7 +55,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
         namaToko = (TextView) findViewById(R.id.alasanReparasi_text_namaToko);
         alamatToko = (TextView) findViewById(R.id.alasanReparasi_text_alamatToko);
         ListView list_alasan = (ListView) findViewById(R.id.alasanReparasi_listView_alasanReparasi); //tampilkan list reparasi
-        EditText alasan_lain = (EditText) findViewById(R.id.alasanReparasi_editText_alasanLain);
+        alasan_lain = (EditText) findViewById(R.id.alasanReparasi_editText_alasanLain);
 
 
 
@@ -89,7 +92,34 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
 
     private void konfirmasi(){
+        String alasan_lain_Str = alasan_lain.getText().toString();
 
+        if (!(TextUtils.isEmpty(alasan_lain_Str))){
+            AlertDialog.Builder alert_adaAlasanLain;
+
+            alert_adaAlasanLain = new AlertDialog.Builder(this).setTitle("ada alasan lain");
+            alert_adaAlasanLain.setMessage("Jika ada alasan lain, maka ada kemungkinan penambahan harga tidak tertera pada aplikasi" +
+                    "ini. \n\n Mau Lanjut ?");
+            alert_adaAlasanLain.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            alert_adaAlasanLain.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    return;
+                }
+            });
+
+        }
+
+        else {
+
+        }
     }
 
 
