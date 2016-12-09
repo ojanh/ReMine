@@ -33,7 +33,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
     ListView list_alasan;
     EditText alasan_lain;
     List<Alasan_reparasi> list_reparasi = new ArrayList<>();
-    EditText alasan_lain;
+
 
 
     @Override
