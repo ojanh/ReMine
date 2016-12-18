@@ -37,9 +37,8 @@ public class LoginMenu extends AppCompatActivity {
     EditText usernam;
     EditText passw;
     EditText ip_addr;
-    String result="s";
 
-    //create Activity
+    //Activity dari Login menu
     @Override
     protected void onCreate(Bundle savedInstanceState) { //saat di launch event
         super.onCreate(savedInstanceState);
@@ -47,16 +46,17 @@ public class LoginMenu extends AppCompatActivity {
 
         setContentView(R.layout.activity_login_menu);
 
+        //declare dan assign variabel objek
         loginBtn = (Button) findViewById(R.id.loginbutton);
         usernam = (EditText) findViewById(R.id.username);
         passw = (EditText) findViewById(R.id.pass);
         ip_addr = (EditText) findViewById(R.id.ip_addr_set);
 
-        //saat klik loginButton
-
+        //event klik login button
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //check koneksi
                 ConnectivityManager connMgr =
                         (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -80,20 +80,21 @@ public class LoginMenu extends AppCompatActivity {
         String URL;
         String role = "";
 
-        //set IP address
+        //set IP address dari textbox ip_addr
         String ip_addr_set = ip_addr.getText().toString();
 
         //save data ke sharedpreferences
         shpref(usernam.getText().toString(), ip_addr.getText().toString());
 
-        //pindah ke Class Login (Inner Class)
+        //pindah ke Class Login, extend class threading Async task(Inner Class)
         //melakukan komunikasi ke server untuk cek apa user dan password sesuai dengan di server
-
         Login login = new Login(LoginMenu.this);
 
         //jika kondisi URL nya tidak diisi dan diisi
         if (TextUtils.isEmpty(ip_addr_set)) {
-            Toast.makeText(LoginMenu.this, "no IP, Set to localhost", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginMenu.this, "no IP, Set to rpltest.000webhostapp.com", Toast.LENGTH_SHORT).show();
+            shpref(usernam.getText().toString(), "rpltest.000webhostapp.com");
+            login.URL = "http://rpltest.000webhostapp.com/";
         } else {
 
             URL = "http://" + ip_addr_set + "/";
@@ -101,15 +102,14 @@ public class LoginMenu extends AppCompatActivity {
             login.URL = URL;
         }
 
-        //get roles
-
+        //background execution dengan parameter username dan text
         login.execute(usernam.getText().toString(), passw.getText().toString());
 
 
 
     }
 
-    //save username dan roles
+    //save username dan roles di shared preferences
     private void shpref(String username, String IP_addr) {
         SharedPreferences shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor sheditor = shpref.edit();
@@ -119,22 +119,21 @@ public class LoginMenu extends AppCompatActivity {
 
     }
 
-    //pindah activity
+    //pindah activity ke login menu (users) atau toko menu (toko)
     private void intent_change(String role){
-        Toast.makeText(LoginMenu.this, "pindah fungsi dengan Role: " + role, Toast.LENGTH_SHORT).show();
 
         //jika rolenya adalah toko
         if (role.compareTo("toko")==0) {
-            Toast.makeText(LoginMenu.this, "Berpindah ke toko menu", Toast.LENGTH_SHORT).show();
             Intent pindah = new Intent(getApplicationContext(), toko_menu.class);
             startActivity(pindah);
-
+            finish();
         }
 
         //jika role nya adalah users
         if(role.compareTo("klien")==0){
             Intent pindah = new Intent(getApplicationContext(), MainMenu.class);
             startActivity(pindah);
+            finish();
         }
 
 
@@ -143,7 +142,7 @@ public class LoginMenu extends AppCompatActivity {
     //bikin thread baru untuk login
     class Login extends AsyncTask<String, Void, Boolean> {
 
-
+        AlertDialog shows;
         AlertDialog.Builder dialoggetQuery; //getquery dialog
         String hasil_temp;
         String roles;
@@ -215,13 +214,12 @@ public class LoginMenu extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            dialoggetQuery.show();
-
-
+            shows = dialoggetQuery.show();
         }
 
         @Override
         protected void onPostExecute(Boolean aVoid) {
+            shows.dismiss();
             Log.d("conn", "nilai out = "+ hasil_temp + ", Koneksi : " + isNoConnection + aVoid);
 
             //jika ada koneksi, cek roles dan pindah intent, kalau tidak ya close thread koneksi
@@ -236,10 +234,7 @@ public class LoginMenu extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //menampilkan dialog sudah dapat
-                dialoggetQuery.setMessage(message);
-                dialoggetQuery.show();
-
+                Toast.makeText(LoginMenu.this, message, Toast.LENGTH_SHORT).show();
                 Log.d("out","Roles: " + roles);
 
                 //pindah activity dengan kondisi role toko atau users
@@ -248,7 +243,7 @@ public class LoginMenu extends AppCompatActivity {
 
             else {
 
-                Toast.makeText(LoginMenu.this, "tak ada koneksi, coba ulang lagi atau Set IP nya", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginMenu.this, "tak ada koneksi, coba ulang lagi atau ganti IP nya", Toast.LENGTH_SHORT).show();
                 cancel(true);
             }
 

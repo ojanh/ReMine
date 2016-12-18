@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.example.ojan_.remine.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by ojan_ on 02/12/2016.
@@ -30,6 +32,7 @@ public class Adapter_alasanReparasi extends ArrayAdapter<Alasan_reparasi>{
 
     int lViewId;
     int total = 0;
+
 
     public Adapter_alasanReparasi(Context context, int resource, List<Alasan_reparasi> objects) {
         super(context, resource, objects);

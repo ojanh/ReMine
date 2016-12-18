@@ -49,10 +49,9 @@ import java.util.List;
 
 /** system
  * Google Map Fragment
- * Buat List View jadi button
  *
  * *Algoritma:
- * cari di database sesuai dengan permintaan yang mau direparasi, radius 5 km
+ * cari di database sesuai dengan permintaan yang mau direparasi, radius 7 km
  * file diterima dalam JSON, ubah ke dalam Array
  * Dari Array, tampilkan Di List View
  *
@@ -60,11 +59,14 @@ import java.util.List;
  * Api Gmaps Key =  AIzaSyApttRaZZeTxMmt1-HdB3FZFyENx7WyvXo
  */
 
+/** Cari tempatReaparasi
+ *
+ */
 
 public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReadyCallback, LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    //initial objects and variables
+    //inisialisasi objects and variables
     SharedPreferences shpref;
     String pilihan;
 
@@ -74,46 +76,46 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
     MapFragment mapFragment;
     GoogleMap mGoogleMap;
     GoogleApiClient mGoogleApiClient;
+    GetInfo getInfo;
+
+    double[] posKoordinat = new double[]{0.00000, 0.0000}; //{latitude, Longitude} variabel posisi
+    private String kategori;
 
 
-    double[] posKoordinat = new double[]{0.00000, 0.0000}; //{latitude, Longitude}
-
-
-    //tampilkan data ke dalam
+    //method saat activity mulai dijalankan dari inheritance di class AppcompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-
         setContentView(R.layout.activity_cari_tempat_reparasi);
 
+        //inisialisasi variabel
         pilihan = getIntent().getStringExtra("pilih");
         shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pgBar = (ProgressBar) findViewById(R.id.progressBar_getListBengkel);
-        tampil_list_reparasi = (ListView) findViewById(R.id.list_reparasi); //tampilkan list reparasi
+        tampil_list_reparasi = (ListView) findViewById(R.id.list_reparasi);
+
 
         checkApi();
         checkGPS();
         initMap();
 
+        //debugging
         Log.d("GMAP d2", "GMAP var is ? " + mGoogleMap);
 
 
         Intent intent = getIntent();
-        String kategori= intent.getStringExtra("pilih");
+        kategori = intent.getStringExtra("pilih"); //mengambil kategori yang dipilih untuk dicari di database
 
-        Log.d("data", "kategori: " +  kategori);
-
-        new GetInfo().execute(String.valueOf(posKoordinat[0]), String.valueOf(posKoordinat[1]),kategori);
-
-
-
+        //debugging
+        Log.d("data", "kategori: " + kategori);
 
 
 
     }
 
+    //method impelementasi dari interface di class OnMapCallBack
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -128,6 +130,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
         mGoogleApiClient.connect();
     }
 
+    //cek googlePlayServices di Android
     private void checkApi() {
         GoogleApiAvailability gugelAPI = GoogleApiAvailability.getInstance();
         int isAvailable = gugelAPI.isGooglePlayServicesAvailable(this);
@@ -142,12 +145,14 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
+    //inisialisasi google maps
     private void initMap() {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
     }
 
+    //ambil data dari GPS
     private void checkGPS() {
         GetGPS getGPS = new GetGPS(getApplicationContext());
 
@@ -161,13 +166,12 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
         else {
             posKoordinat[0]=getGPS.getLatitude();
             posKoordinat[1]=getGPS.getLongitude();
-            Toast.makeText(this, "Posisi :: Lintang: " + posKoordinat[0] + ",Bujur: " + posKoordinat[1] , Toast.LENGTH_LONG).show();
-
-
+            Log.d("Position", String.valueOf(posKoordinat));
         }
 
     }
 
+    //menampilkan list bengkel hasil query
     private void setListBengkel(String hasil)  {
         int i;
 
@@ -247,15 +251,17 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
+    //method untuk memindahkan peta di google maps
     private void moveGMap(double v, double v1) {
         Log.d("GMAP d1", "GMAP var is ? " + mGoogleMap);
 
-        LatLng posLatLng = new LatLng(v, v1);
+        LatLng posLatLng = new LatLng(v, v1); //menyimpan lokasi di object latlng
         CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(posLatLng);
-        mGoogleMap.moveCamera(camUpdate);
+        mGoogleMap.moveCamera(camUpdate);//memindahkan posisi peta di gmaps
 
     }
 
+    //method untuk pindah Activity dengan menyimpan data nama, alamat, dan id dari toko di intent
     private void pindahActivity(String nama_toko, String alamat_toko, String toko_id) {
         Intent pindahActivity = new Intent(getApplicationContext(), alasan_konfirmasi.class);
         pindahActivity.putExtra("nama_toko", nama_toko);
@@ -265,8 +271,10 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
+    //inisialisasi object locationRequest
     LocationRequest mLocationReq;
 
+    //method impelementasi dari interface di class LocationListener
     @Override
     public void onLocationChanged(Location location) {
         if(location == null){
@@ -280,8 +288,10 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
             mGoogleMap.animateCamera(update);
         }
 
+        new GetInfo().execute(String.valueOf(posKoordinat[0]), String.valueOf(posKoordinat[1]), kategori);
     }
 
+    //method impelementasi dari interface di class GoogleAPIclient
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationReq = LocationRequest.create();
@@ -292,18 +302,20 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
 
     }
 
+    //method impelementasi dari interface di class GoogleAPIclient
     @Override
     public void onConnectionSuspended(int i) {
 
     }
 
+    //method impelementasi dari interface di class LocationListener
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
 
-    //get data dari internet
+    //mengambil data dari database dengan background task
     class GetInfo extends AsyncTask<String, Void, String> {
 
 
@@ -362,6 +374,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
             if (hasil != null){
                 Log.d("conn", "hasil: " + hasil);
                 setListBengkel(hasil);
+                cancel(true);
             }
             else {
                 Toast.makeText(getApplicationContext(), "Tak ada koneksi, tak ada data masuk", Toast.LENGTH_LONG).show();

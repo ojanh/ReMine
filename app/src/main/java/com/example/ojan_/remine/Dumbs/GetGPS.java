@@ -35,6 +35,8 @@ public class GetGPS extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
+    boolean isAvailableDataGPS = true;
+
 
     boolean isNotAllowed = false;
     // hitung jarak minimum buat get data lagi
@@ -71,8 +73,11 @@ public class GetGPS extends Service implements LocationListener {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 GPSdata(LocationManager.NETWORK_PROVIDER);
 
-                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                if (!isAvailableDataGPS) Toast.makeText(ctx, "Maaf, GPS data tidak ada", Toast.LENGTH_SHORT).show();
+
+                if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
                     GPSdata(LocationManager.GPS_PROVIDER);
+                    if (!isAvailableDataGPS) Log.d("GPS:", "tidak ada data dari GPS langsung");
                 }
 
             } else {
@@ -96,6 +101,7 @@ public class GetGPS extends Service implements LocationListener {
 
         }
         else {
+            isAvailableDataGPS=false;
             Log.d("GPS ", "GPS data tidak ada");
         }
 
@@ -152,4 +158,7 @@ public class GetGPS extends Service implements LocationListener {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
+
 }

@@ -8,13 +8,17 @@
     >
 
    <TextView
-       android:layout_width="wrap_content"
+       android:layout_width="200dp"
        android:layout_height="wrap_content"
-       android:text="Alasan"
+       android:text="Alasannnnnnnnnnnnnnnnnnnnnnnn"
        android:id="@+id/alasan_tulisan"
        android:layout_marginTop="12dp"
        android:layout_marginStart="10dp"
+       android:maxLines="18"
+
+       android:ellipsize="none"
        android:textSize="11pt"
+       android:scrollHorizontally="false"
        />
 
     <CheckBox
@@ -44,8 +48,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/text_rupiah"
         android:layout_marginEnd="7dp"
-        android:layout_alignTop="@+id/listview_alasanReparasi_harga"
-        android:layout_toStartOf="@+id/listview_alasanReparasi_harga" />
+        android:layout_alignBaseline="@+id/checkBox_pilih"
+        android:layout_alignBottom="@+id/checkBox_pilih"
+        android:layout_toStartOf="@id/listview_alasanReparasi_harga" />
 
 
 </RelativeLayout>

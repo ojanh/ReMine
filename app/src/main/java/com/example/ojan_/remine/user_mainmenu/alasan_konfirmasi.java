@@ -1,12 +1,10 @@
 package com.example.ojan_.remine.user_mainmenu;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +31,7 @@ import java.util.List;
 
 public class alasan_konfirmasi extends AppCompatActivity {
 
+    //insialisasi variabel dan objek
     SharedPreferences shpref;
     String user_id, alamat_toko, nama_toko, kategori, toko_id;
     String alasan_all, aditional_alasan;
@@ -43,17 +42,20 @@ public class alasan_konfirmasi extends AppCompatActivity {
     ListView list_alasan;
     EditText alasan_lain;
     List<Alasan_reparasi> list_alasanReparasi = new ArrayList<>();
-
-
+    
+    
     Adapter_alasanReparasi adapterAlasan;
-    Alasan_reparasi[] TV, radio, komputer;
+    private Alasan_reparasi[] laptop, printer, komputer, handphone;
 
 
+    //method saat activity pertama kali dijalankan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alasan_konfirmasi);
 
+
+        //mengambil shared preferencess
         shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         setAlasan();
@@ -66,11 +68,12 @@ public class alasan_konfirmasi extends AppCompatActivity {
         Button button_konfirmasi = (Button) findViewById(R.id.alasanReparasi_button_konfirmasi);
 
         switch (kategori){
-            case "TV" : Log.d("swit chos", "choosed TV" ); addList(TV); break;
-            case "radio" : Log.d("swit chos", "choosed radio" ) ;addList(radio); break;
+            case "laptop" : Log.d("swit chos", "chosen laptop" ); addList(laptop); break;
+            case "printer" : Log.d("swit chos", "chosen printer" ) ;addList(printer); break;
             case "komputer" : Log.d("swit chos", "choosed komputer" ) ;addList(komputer); break;
+            case "handphone" : Log.d("swit chos", "choosed hp" ) ;addList(handphone); break;
             default:
-                addList(TV);
+                addList(laptop);
         }
 
 
@@ -97,20 +100,25 @@ public class alasan_konfirmasi extends AppCompatActivity {
         }
     }
 
+    //method untuk setup alasan
     private void setAlasan() {
-        TV=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"karena rusak", 120000),
-                                new Alasan_reparasi(1,false,"karena A", 35000),
-                                new Alasan_reparasi(2,false,"karena B", 240000)};
+        laptop=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"Keyboard Notebook Macet", 50000),
+                                new Alasan_reparasi(1,false," Mainboard Notebook", 150000),
+                                new Alasan_reparasi(2,false,"Charger", 60000)};
 
-        radio=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"karena rusak", 120000),
-                new Alasan_reparasi(1,false,"karena A", 35000),
-                new Alasan_reparasi(2,false,"karena B", 240000)};
+        printer =new Alasan_reparasi[]{new Alasan_reparasi(0,false,"Reset Printer \n(blink)", 25000),
+                                    new Alasan_reparasi(1,false,"Cleaning Catridge kering", 20000)};
 
-        komputer=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"karena rusak", 120000),
-                new Alasan_reparasi(1,false,"karena A", 35000),
-                new Alasan_reparasi(2,false,"karena B", 240000)};
+        komputer=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"Fan kering", 40000),
+                                    new Alasan_reparasi(1,false,"LCD", 90000),
+                                    new Alasan_reparasi(2,false,"Servis I/O \n(Colokan PS 2) \n/USB Disconect", 240000)};
+
+        handphone =new Alasan_reparasi[]{new Alasan_reparasi(0,false,"USB Connector", 300000),
+                                    new Alasan_reparasi(1,false,"LCD", 800000),
+                                    new Alasan_reparasi(2,false,"mic", 250000)};
 
     }
+
 
     private void getData_fromActivity() {
         Intent getData = getIntent();
@@ -194,7 +202,9 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     private void pindahMainActivity() {
         Intent pindahActivity = new Intent(this, MainMenu.class);
+        pindahActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(pindahActivity);
+
     }
 
     class OrderRepair extends AsyncTask<String, Integer, String> {
@@ -262,7 +272,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                       /* pindahMainActivity();*/
+                        pindahMainActivity();
                     }
                 });
                 alert_isDone.show();

@@ -16,7 +16,7 @@
     <!-- Setting manifest aplication -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/logo_launcher"
+        android:icon="@mipmap/reicon_launch"
         android:label="@string/default_name"
         android:logo="@drawable/remine_logo"
         android:supportsRtl="true">
@@ -34,22 +34,26 @@
         <!-- Main Menu -->
         <activity
             android:name=".user_mainmenu.MainMenu"
-            android:theme="@style/MainMenuStyle" />
+            android:theme="@style/MainMenuStyle"
+            android:label=" "/>
 
         <!-- Menu Reparasi -->
         <activity
             android:name=".user_mainmenu.Cari_tempatReparasi"
-            android:theme="@style/MainMenuStyle" />
+            android:theme="@style/MainMenuStyle"
+            android:label=" "/>
 
         <!-- Data Bengkel -->
         <activity
             android:name=".user_mainmenu.data_bengkel"
-            android:theme="@style/MainMenuStyle" />
+            android:theme="@style/MainMenuStyle"
+            android:label=" "/>
 
         <!-- Alasan Konfirmasi -->
         <activity
             android:name=".user_mainmenu.alasan_konfirmasi"
-            android:theme="@style/MainMenuStyle" />
+            android:theme="@style/MainMenuStyle"
+            android:label=" "/>
 
 
         <activity

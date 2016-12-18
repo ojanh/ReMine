@@ -23,61 +23,32 @@
 
     <!--Radioo-->
     <!--Radio service icon button -->
-    <ImageButton
-        android:layout_width="25pt"
-        android:layout_height="25pt"
-        android:layout_below="@+id/MainMenu_welcome_text"
-        android:background="@drawable/radio_icon"
-        android:id="@+id/radioservice_button"
-        android:layout_marginTop="12pt"
-        android:layout_marginLeft="30pt"
-        />
 
     <!--tulisan radio service -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Radio"
-        android:textSize="15pt"
-        android:id="@+id/text_serviceRadio"
-        android:layout_above="@+id/tv_icon"
-        android:layout_toEndOf="@+id/radioservice_button"
-        android:layout_marginStart="50dp" />
 
     <!--tv -->
     <!--tv service icon button -->
     <ImageButton
-        android:layout_width="25pt"
+        android:layout_width="30pt"
         android:layout_height="25pt"
-        android:layout_below="@+id/radioservice_button"
+        android:layout_below="@+id/umenu_laptop_button"
         android:layout_marginTop="12pt"
         android:layout_marginLeft="30pt"
-        android:id="@+id/tv_icon" />
+        android:background="@drawable/printer"
+        android:id="@+id/usermenu_im_printer" />
 
     <!--tulisan tv service -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="TV"
-        android:textSize="15pt"
-        android:id="@+id/text_serviceTV"
-        android:layout_alignTop="@+id/tv_icon"
-        android:layout_alignStart="@+id/text_serviceRadio"
-        android:layout_marginTop="5pt"
-        android:layout_marginStart="12pt"/>
 
     <!--Komputer -->
     <!--Komputer service icon button -->
     <ImageButton
-        android:layout_width="25pt"
+        android:layout_width="30pt"
         android:layout_height="25pt"
-        android:layout_below="@+id/tv_icon"
+        android:layout_below="@+id/usermenu_im_printer"
         android:layout_marginTop="12pt"
-        android:layout_marginLeft="30pt"
-        android:id="@+id/komputer_icon"
-        android:onClick=""/>
+        android:layout_marginLeft="28pt"
+        android:background="@drawable/komputer_icon"
+        android:id="@+id/uname_im_komputer" />
 
     <!--tulisan komputer service -->
     <TextView
@@ -88,8 +59,67 @@
         android:textSize="15pt"
         android:id="@+id/text_servicekomputer"
         android:layout_marginBottom="6dp"
-        android:layout_alignBottom="@+id/komputer_icon"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignBottom="@+id/uname_im_komputer"
+        android:layout_toEndOf="@+id/uname_im_komputer"
+        android:layout_marginStart="30dp"/>
+
+    <!--Kulkas-->
+    <!--Icon Kulkas Service-->
+    <ImageButton
+        android:layout_width="25pt"
+        android:layout_height="36pt"
+        android:layout_below="@+id/uname_im_komputer"
+        android:layout_marginTop="12pt"
+        android:layout_marginLeft="30pt"
+        android:id="@+id/usermenu_image_kulkasIcon"
+        android:background="@drawable/hape"
+        android:onClick=""/>
+
+   <!-- Text Kulkas-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Printer"
+        android:textSize="15pt"
+        android:id="@+id/text_serviceTV"
+        android:layout_above="@+id/uname_im_komputer"
+        android:layout_alignEnd="@+id/text_serviceRadio"
+        android:layout_marginEnd="2dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Handphone"
+        android:textSize="15pt"
+        android:id="@+id/username_text_kulkas"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="9dp"
+        android:layout_alignBottom="@+id/usermenu_image_kulkasIcon"
+        android:layout_toEndOf="@+id/usermenu_image_kulkasIcon"
+        android:layout_marginStart="20dp"/>
+
+    <ImageButton
+        android:layout_width="38pt"
+        android:layout_height="25pt"
+        android:background="@drawable/lappie"
+        android:id="@+id/umenu_laptop_button"
+        android:layout_marginTop="23dp"
+        android:layout_alignEnd="@+id/usermenu_im_printer"
+        android:layout_below="@+id/MainMenu_welcome_text"
+         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Laptop"
+        android:textSize="15pt"
+        android:id="@+id/text_serviceRadio"
+        android:layout_alignBottom="@+id/umenu_laptop_button"
+        android:layout_alignStart="@+id/text_servicekomputer" />
 
 
 </RelativeLayout>
