@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created by Rumahku on 01/12/2016.
+ * Class untuk objek dari isi Alasan Reparasi
  */
 
 public class Adapter_cari_reparasi extends BaseAdapter {

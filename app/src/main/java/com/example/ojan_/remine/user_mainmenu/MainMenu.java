@@ -42,7 +42,7 @@ public class MainMenu extends AppCompatActivity {
         laptop_button = (ImageButton) findViewById(R.id.umenu_laptop_button);
         printer_button = (ImageButton) findViewById(R.id.usermenu_im_printer);
         komputer_button = (ImageButton) findViewById(R.id.uname_im_komputer);
-        Hape_button = (ImageButton) findViewById(R.id.usermenu_image_kulkasIcon);
+        Hape_button = (ImageButton) findViewById(R.id.umenu_im_handphone);
 
         //mengambil data username dari sharedPreferences
         SharedPreferences shpref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

@@ -93,6 +93,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     }
 
+    //menampilkan  list dari alasan reparasi
     private void addList(Alasan_reparasi[] data) {
         int i;
         for (i=0; i<data.length; i++){
@@ -100,7 +101,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
         }
     }
 
-    //method untuk setup alasan
+    //method untuk setup alasan reaparasi
     private void setAlasan() {
         laptop=new Alasan_reparasi[]{new Alasan_reparasi(0,false,"Keyboard Notebook Macet", 50000),
                                 new Alasan_reparasi(1,false," Mainboard Notebook", 150000),
@@ -119,7 +120,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     }
 
-
+    //mengambil data dari Activity dan Shared Preferences
     private void getData_fromActivity() {
         Intent getData = getIntent();
         nama_toko = getData.getStringExtra("nama_toko");
@@ -130,7 +131,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
         lintang = Double.parseDouble(shpref.getString("lintang", "0.0000"));
         bujur = Double.parseDouble(shpref.getString("bujur", "0.0000"));
 
-
+        //debugging
         Log.d("shared pref", "kategori: " + kategori);
         Log.d("data", "nama toko: "+ nama_toko + ", Alamat Toko: " + alamat_toko
                 + ", kategori: " + kategori  + ", User_id: " + user_id + ", toko_id: " + toko_id);
@@ -138,6 +139,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     }
 
+    //menampiljan konfirmasi dengan adanya dialogbox
     private void konfirmasi(){
         final String alasan_lain_Str = alasan_lain.getText().toString();
 
@@ -170,8 +172,12 @@ public class alasan_konfirmasi extends AppCompatActivity {
         }
     }
 
+    //method melakukan transaksi request service ke tukang reparasi lewat database dengan alasan tambahan
     private void insertDataWithAlasanTambahan(String alasan_lain_str) {
+
+        //setup total alasan yang dicontreng
         int total = adapterAlasan.getTotal();
+
         ArrayList<String> alasan_build = adapterAlasan.getAlasan_build();
         alasan_build.add(alasan_lain_str);
         aditional_alasan = alasan_lain_str;
@@ -184,9 +190,11 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     }
 
+    //method melakukan transaksi request service ke tukang reparasi lewat database
     private void insertData() {
         int total = adapterAlasan.getTotal();
 
+        //cek apakah ada alasan reparasi untuk dikirim ke tukang reparasi
         if (aditional_alasan!=null){
             adapterAlasan.getAlasan_build().remove(aditional_alasan);
             aditional_alasan=null;
@@ -200,6 +208,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
         new OrderRepair().execute(String.valueOf(total));
     }
 
+    //pindah ke main menu lagi
     private void pindahMainActivity() {
         Intent pindahActivity = new Intent(this, MainMenu.class);
         pindahActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -207,6 +216,7 @@ public class alasan_konfirmasi extends AppCompatActivity {
 
     }
 
+    //komunikasi ke database
     class OrderRepair extends AsyncTask<String, Integer, String> {
         private ProgressDialog pgDialog;
         private AlertDialog.Builder alert_isDone;

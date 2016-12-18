@@ -138,6 +138,7 @@ public class Cari_tempatReparasi extends AppCompatActivity implements OnMapReady
             Log.d("GPS", "no GPlay service");
             Toast.makeText(this, "can't connect to google play services", Toast.LENGTH_SHORT).show();
         }
+
         else if (gugelAPI.isUserResolvableError(isAvailable)){
             Dialog dialog = gugelAPI.getErrorDialog(this, isAvailable, 0);
             dialog.show();

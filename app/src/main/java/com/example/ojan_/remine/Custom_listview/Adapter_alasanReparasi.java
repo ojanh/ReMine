@@ -21,6 +21,8 @@ import java.util.Locale;
 
 /**
  * Created by ojan_ on 02/12/2016.
+ *
+ * Class untuk Adapter di List Alasan Reparasi pada activity alasan_konfirmasi
  */
 
 public class Adapter_alasanReparasi extends ArrayAdapter<Alasan_reparasi>{
@@ -64,7 +66,7 @@ public class Adapter_alasanReparasi extends ArrayAdapter<Alasan_reparasi>{
         alasan_text.setText(listObject.get(position).getAlasan());
         harga_text.setText(String.valueOf(listObject.get(position).getHarga()));
 
-
+        //kondisi saat contrengan diklik
         checkBox_contreng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
